@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <string.h>
 #include <stdbool.h>
 
 bool check_for_match(char *str, char arg[]);
 bool check_for_sequence(char *str,int start_point1,char *arg, int startpoint2);
 bool check_char_for_match(char a, char b);
 
-
+int string_length(char *str);
 bool check_for_correct_input(char *name, char *number, int MAX_CHAR);
 bool is_digits_valid(char *num);
 bool is_in_range(char *str, int MAX_CHAR);
 
 void tolow(char *str);
-void toup(char *str, int i, int j);
 
 
 int main(int argc, char **argv)
@@ -21,8 +19,8 @@ int main(int argc, char **argv)
 
     if (argc == 3){
         // argument in console must be in digit
-        if(!(is_digits_valid(argv[2])) && argv[1] == "-s"){
-            fprintf(stderr,"Invalid arguments - non digit search argument");
+        if(!(is_digits_valid(argv[2])) || argv[1] != "-s"){
+            fprintf(stderr,"Invalid arguments input\n");
             return 1;
         }
         // max symbols that a string can have
@@ -45,8 +43,8 @@ int main(int argc, char **argv)
 
             else {
                 //replace \n in the name string with \0
-                name[strlen(name) - 1] = '\0';
-                number[strlen(number) - 1] = '\0';
+                name[string_length(name) - 1] = '\0';
+                number[string_length(number) - 1] = '\0';
                 //check for match
                 if(check_for_sequence(number, 0, argv[2], 0) || check_for_sequence(name, 0, argv[2], 0)){
                     printf("%s, %s\n", name, number);
@@ -85,8 +83,8 @@ int main(int argc, char **argv)
 
             else {
                 //replace \n in the name string with \0
-                name[strlen(name) - 1] = '\0';
-                number[strlen(number) - 1] = '\0';
+                name[string_length(name) - 1] = '\0';
+                number[string_length(number) - 1] = '\0';
                 //check for match
                 if (check_for_match(name,  argv[1]) || check_for_match(number,  argv[1])) {
                     printf("%s, %s\n", name, number);
@@ -117,8 +115,8 @@ int main(int argc, char **argv)
             }
             else {
                 //replace \n in the name string with \0 for prettier output
-                name[strlen(name) - 1] = '\0';
-                number[strlen(number) - 1] = '\0';
+                name[string_length(name) - 1] = '\0';
+                number[string_length(number) - 1] = '\0';
                 //print the result
                 printf("%s, %s\n", name, number);
             }
@@ -137,13 +135,13 @@ int main(int argc, char **argv)
 }
 
 bool check_for_match(char *str, char *arg){
-    for (int i = 0; i < strlen(str); i++){
+    for (int i = 0; i < string_length(str); i++){
             if(check_char_for_match(str[i], arg[0])) {
                 str[i] = toupper(str[i]);
-                for (int count = 1; count <= strlen(arg); count++){
+                for (int count = 1; count <= string_length(arg); count++){
                     if (check_char_for_match(str[count + i], arg[count])) {
                         str[count + i] = toupper(str[count + i]);
-                        if(count == strlen(arg) - 1){
+                        if(count == string_length(arg) - 1){
                             return true;
                         }
                     }
@@ -170,13 +168,13 @@ bool check_for_match(char *str, char *arg){
 
 // search if there are a match in a string even if there are some other symbols between the searched ones(-s func)
 bool check_for_sequence(char *str,int start_point1,char *arg, int start_point2){
-    for (int i = start_point1; i < strlen(str); i++){
+    for (int i = start_point1; i < string_length(str); i++){
         //checking if two chars match
          if(check_char_for_match(str[i], arg[start_point2])){
             str[i] = toupper(str[i]);
             start_point1 = i + 1;
             //end of rekursion if the function found the last searched variable
-            if(start_point2 == (strlen(arg) - 1)){
+            if(start_point2 == (string_length(arg) - 1)){
                 return true;
             }
             start_point2++;
@@ -195,7 +193,7 @@ bool check_for_sequence(char *str,int start_point1,char *arg, int start_point2){
 bool check_char_for_match(char a, char b) {
     char reprCisla[10][6] = {"0+", "1", "2abc", "3def", "4ghi", "5jkl", "6mno", "7pqrs", "8tuv", "9wxyz"};
     int row = b - '0';
-    int len = strlen(reprCisla[row]);
+    int len = string_length(reprCisla[row]);
     for (int i = 0; i < len; i++) {
         if (tolower(a) == reprCisla[row][i]) {
             return true;
@@ -205,7 +203,7 @@ bool check_char_for_match(char a, char b) {
 }
 
 bool check_for_correct_input(char *name, char *number, int MAX_CHAR){
-    if (strlen(name) <= 1 || strlen(number) <= 1){
+    if (string_length(name) <= 1 || string_length(number) <= 1){
         fprintf( stderr, "Incorrect input, length is 0\n");
         return false;
     }
@@ -222,7 +220,7 @@ bool check_for_correct_input(char *name, char *number, int MAX_CHAR){
 }
 
 bool is_digits_valid(char *num){
-    for (int i = 0; i < strlen(num); i++){
+    for (int i = 0; i < string_length(num); i++){
         if(num[i] == '\n' || num[i] == '\0'){
             continue;
         }
@@ -235,7 +233,7 @@ bool is_digits_valid(char *num){
 }
 
 bool is_in_range(char *str, int MAX_CHAR){
-    int len = strlen(str);
+    int len = string_length(str);
     char a = str[len - 1];
     if(len <= 0){
         return false;
@@ -259,11 +257,10 @@ void tolow(char *str) {
     }
 }
 
-//makes a string in upper case
-void toup(char *str, int i, int j) {
-    int howmany = i + j;
-    for(i; i < howmany; i++){
-        str[i] = toupper(str[i]);
-        // make if aspace doesnt matter
+int string_length(char *str){
+    int len = 0;
+    while(str[len] != '\0'){
+        len++;
     }
+    return len;
 }
