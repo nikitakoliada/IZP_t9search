@@ -136,17 +136,21 @@ int main(int argc, char **argv)
 
 }
 
-bool check_for_match(char *str, char arg[]){
+bool check_for_match(char *str, char *arg){
     for (int i = 0; i < strlen(str); i++){
             if(check_char_for_match(str[i], arg[0])) {
                 str[i] = toupper(str[i]);
-                for (int count = 1; count < strlen(arg); count++){
-                    if (check_char_for_match(str[count + i], arg[i])) {
+                for (int count = 1; count <= strlen(arg); count++){
+                    if (check_char_for_match(str[count + i], arg[count])) {
                         str[count + i] = toupper(str[count + i]);
                         if(count == strlen(arg) - 1){
                             return true;
                         }
                     }
+                    else{
+                        break;
+                    }
+
                 }
             }
         }
@@ -196,7 +200,6 @@ bool check_char_for_match(char a, char b) {
         if (tolower(a) == reprCisla[row][i]) {
             return true;
         }
-
     }
     return false;
 }
