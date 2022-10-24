@@ -4,7 +4,7 @@
 
 bool check_for_match(char *str, char arg[]);
 bool check_for_sequence(char *str,int start_point1,char *arg, int startpoint2);
-bool compare_chars(char a, char b);
+bool compare_chars(char first_string, char second_char);
 bool string_compare(char *str1, char *str2);
 
 int string_length(char *str);
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
 
     if (argc == 3){
-        // argument in console must be in digit
+        // the first arg must be "-s" and second argument in console must be in digit
         if((is_digits_valid(argv[2]) == false) || (string_compare(argv[1], "-s") == false)){
             fprintf(stderr,"Invalid arguments input\n");
             return 1;
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
                 //replace \n in the name string with \0
                 name[string_length(name) - 1] = '\0';
                 number[string_length(number) - 1] = '\0';
-                //check for match
+                //check for match(main algorithm)
                 if(check_for_sequence(number, 0, argv[2], 0) || check_for_sequence(name, 0, argv[2], 0)){
                     printf("%s, %s\n", name, number);
                     found_match = true;
@@ -172,12 +172,13 @@ bool check_for_sequence(char *str,int start_point1,char *arg, int start_point2){
 }
 
 //checks if a character matches any other character that represents a digit
-bool compare_chars(char a, char b) {
-    char reprCisla[10][6] = {"0+", "1", "2abc", "3def", "4ghi", "5jkl", "6mno", "7pqrs", "8tuv", "9wxyz"};
-    int row = b - '0';
-    int len = string_length(reprCisla[row]);
+bool compare_chars(char first_string, char second_char) {
+    // a massive in which each row represents a specific digit
+    char repr_digits[10][6] = {"0+", "1", "2abc", "3def", "4ghi", "5jkl", "6mno", "7pqrs", "8tuv", "9wxyz"};
+    int row = second_char - '0';
+    int len = string_length(repr_digits[row]);
     for (int i = 0; i < len; i++) {
-        if (tolower(a) == reprCisla[row][i]) {
+        if (tolower(first_string) == repr_digits[row][i]) {
             return true;
         }
     }
