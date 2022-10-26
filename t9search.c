@@ -95,7 +95,7 @@ int main(int argc, char **argv)
         }
         return 0;
     }
-    //if no arguments were given except for the file
+        //if no arguments were given except for the file
     else if(argc == 1){
         const int MAX_CHAR = 100;
         // maximum symbols for fgets function (with \n) + 1 so that we knew it out of length
@@ -134,20 +134,20 @@ int main(int argc, char **argv)
 
 bool check_for_match(char *str, char *arg){
     for (int i = 0; i < string_length(str); i++){
-            if(compare_chars(str[i], arg[0])) {
-                for (int count = 1; count <= string_length(arg); count++){
-                    if (compare_chars(str[count + i], arg[count])) {
-                        if(count == string_length(arg) - 1){
-                            return true;
-                        }
+        if(compare_chars(str[i], arg[0])) {
+            for (int count = 0; count <= string_length(arg); count++){
+                if (compare_chars(str[count + i], arg[count])) {
+                    if(count == string_length(arg) - 1){
+                        return true;
                     }
-                    else{
-                        break;
-                    }
-
                 }
+                else{
+                    break;
+                }
+
             }
         }
+    }
     return false;
 }
 
@@ -155,7 +155,7 @@ bool check_for_match(char *str, char *arg){
 bool check_for_sequence(char *str,int start_point1,char *arg, int start_point2){
     for (int i = start_point1; i < string_length(str); i++){
         //checking if two chars match
-         if(compare_chars(str[i], arg[start_point2])){
+        if(compare_chars(str[i], arg[start_point2])){
             start_point1 = i + 1;
             //end of rekursion if the function found the last searched variable
             if(start_point2 == (string_length(arg) - 1)){
